@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Quiz Maker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e0f7fa;
+      color: #333;
+    }header {
+  background: #00acc1;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #00838f;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.container {
+  padding: 2rem;
+}
+
+.quiz-form,
+.quiz-display,
+.quiz-result {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label,
+input,
+textarea,
+button {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+input[type="text"],
+textarea {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.75rem;
+  background-color: #00acc1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00838f;
+}
+
+.question {
+  margin-bottom: 1.5rem;
+}
+
+.options label {
+  display: block;
+  background: #f0f0f0;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.correct {
+  background-color: #a5d6a7 !important;
+}
+
+.wrong {
+  background-color: #ef9a9a !important;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Quiz Maker</h1>
+  </header>
+  <nav>
+    <a href="#create">Create Quiz</a>
+    <a href="#take">Take Quiz</a>
+  </nav>  <div class="container">
+    <section id="create" class="quiz-form">
+      <h2>Create a Quiz</h2>
+      <form id="quizForm">
+        <label>Question:</label>
+        <input type="text" id="question" required />
+        <label>Option A:</label>
+        <input type="text" id="optionA" required />
+        <label>Option B:</label>
+        <input type="text" id="optionB" required />
+        <label>Option C:</label>
+        <input type="text" id="optionC" required />
+        <label>Option D:</label>
+        <input type="text" id="optionD" required />
+        <label>Correct Option (A/B/C/D):</label>
+        <input type="text" id="correct" required />
+        <button type="submit">Add Question</button>
+      </form>
+    </section><section id="take" class="quiz-display">
+  <h2>Take the Quiz</h2>
+  <div id="quizContainer"></div>
+  <button onclick="submitQuiz()">Submit Quiz</button>
+</section>
+
+<section class="quiz-result">
+  <h2>Quiz Result</h2>
+  <div id="result"></div>
+</section>
+
+  </div>  <script>
+    const quiz = [];
+
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const q = document.getElementById('question').value;
+      const a = document.getElementById('optionA').value;
+      const b = document.getElementById('optionB').value;
+      const c = document.getElementById('optionC').value;
+      const d = document.getElementById('optionD').value;
+      const correct = document.getElementById('correct').value.toUpperCase();
+
+      quiz.push({ question: q, options: { A: a, B: b, C: c, D: d }, answer: correct });
+      alert('Question added!');
+      this.reset();
+      renderQuiz();
+    });
+
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+
+      quiz.forEach((q, i) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = <p><strong>Q${i+1}:</strong> ${q.question}</p>;
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+        for (let key in q.options) {
+          optionsDiv.innerHTML += <label><input type="radio" name="q${i}" value="${key}"> ${key}: ${q.options[key]}</label>;
+        }
+        div.appendChild(optionsDiv);
+        container.appendChild(div);
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      quiz.forEach((q, i) => {
+        const selected = document.querySelector(input[name='q${i}']:checked);
+        if (selected) {
+          const parentLabel = selected.parentElement;
+          if (selected.value === q.answer) {
+            score++;
+            parentLabel.classList.add('correct');
+          } else {
+            parentLabel.classList.add('wrong');
+          }
+        }
+      });
+      document.getElementById('result').innerText = You scored ${score} out of ${quiz.length};
+    }
+  </script></body>
+</html>
